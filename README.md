@@ -1,0 +1,2 @@
+# Ignore.Zombies
+Ignore.Zombies
