@@ -1,5 +1,5 @@
 local DiscordLib = loadstring(game:HttpGet "https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/discord")()
-local win = DiscordLib:Window("Gopher's Zombie GUI ".."("..GameName..")")
+local win = DiscordLib:Window("Gopher's Zombie GUI ".."(".._G.Game..")")
 local serv = win:Server("Main", "rbxassetid://12157991984")
 local btns = serv:Channel("Buttons")
 
