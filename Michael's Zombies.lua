@@ -2,6 +2,7 @@ local DiscordLib = loadstring(game:HttpGet "https://raw.githubusercontent.com/bl
 local win = DiscordLib:Window("Gopher's Zombie GUI ".."(".._G.Game..")")
 local serv = win:Server("Main", "rbxassetid://12157991984")
 local btns = serv:Channel("Buttons")
+local Ignore = workspace.Ignore
 
 btns:Button(
     "Repair Barriers",
@@ -90,6 +91,31 @@ tgls:Toggle(
 		toggled = bool
 		while toggled and game:GetService('RunService').Heartbeat:Wait() do
 			game:GetService("Players").LocalPlayer.Character.Remotes.Reload:FireServer()
+		end
+    end
+)
+
+local toggledPU = false
+tgls:Toggle(
+    "Auto Powerups",
+    false,
+    function(bool)
+		toggledPU = bool
+		while toggledPU and game:GetService('RunService').Heartbeat:Wait() do
+			for i,v in pairs(Ignore["_Powerups"]:GetChildren()) do
+				spawn(function()
+					while v and v.Parent == Ignore["_Powerups"] and game:GetService("RunService").Heartbeat:Wait() do
+						v.Transparency = 1
+						v.Attachment.ParticleEmitter.Enabled = false
+						v.Attachment.ParticleEmitter.Rate = 0
+						v.Attachment.ParticleEmitter.Lifetime = NumberRange.new(0, 0) 
+						v.SpawnAtt.Smoke.Enabled = false
+						v.SpawnAtt.Shockwave.Enabled = false
+						v.SpawnAtt.Flare.Enabled = false
+						v.CFrame = game.Players.LocalPlayer.Character.PrimaryPart.CFrame
+					end
+				end)
+			end
 		end
     end
 )
@@ -288,6 +314,36 @@ bnds:Bind(
     Enum.KeyCode.B,
     function()
 		game.Players.LocalPlayer.Character:PivotTo(workspace["_MapComponents"].MysteryBox.HumanoidRootPart.CFrame * CFrame.new(0,0,1))
+    end
+)
+bnds:Bind(
+    "Teleport To Friend",
+    Enum.KeyCode.LeftAlt,
+    function()
+		local friend
+		for i,v in pairs(game.Players:GetPlayers()) do
+			if v:IsFriendsWith(game.Players.LocalPlayer.UserId) then
+				friend = v
+				break
+			end
+		end
+		if friend then
+			game.Players.LocalPlayer.Character:PivotTo(friend.Character.PrimaryPart.CFrame)
+		else
+			DiscordLib:Notification("Notification", "No friends ingame! Sorry...", "ok")
+		end
+    end
+)
+bnds:Bind(
+    "Teleport To Power Component",
+    Enum.KeyCode.P,
+    function()
+		local Parts = workspace["_Parts"]:GetChildren()
+		local Part = Parts[math.random(#Parts)]
+
+		if Part and Part:FindFirstChild("PartPickup") then
+			game.Players.LocalPlayer.Character:PivotTo(Part.PartPickup.CFrame)
+		end
     end
 )
 
